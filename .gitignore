@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+#log files
+*.log
+
+#Folders
+*/DA14531
