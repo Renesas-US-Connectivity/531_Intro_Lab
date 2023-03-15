@@ -54,5 +54,9 @@ dkms.conf
 #log files
 *.log
 
+#folders
+*/DA14531/
+
+
 #Folders
 */DA14531
