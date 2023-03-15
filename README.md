@@ -9,7 +9,21 @@ Taking the DA1453x out of the box, changing sleep, advertising, and adding timer
  - SDK6 is downloaded and extracted to your computer.
  - Lab uses DA14531MOD Pro DK.
 
- ## Building the Project the First Time
+ ## Prepare Hardware and Calibrate Power Profiler
+
+ 1. Remove Flash Jumpers (Module has integrated flash) - On J1 Remove the first 5 jumpers.
+
+ 2. Remove Daughterboard, and connect Motherboard to your computer
+
+ 3. Open SmartSnippets Toolbox, and select UART/SPI (SPI is needed for Power Profiler data acquisition).
+
+ 4. Create a new project and name it 531_Mod_Lab.  
+
+ 5. Select the DA14531 under chips and select Launch.
+
+ 6.  Navigate to Power Profiler Tab.  
+
+ ## Importing the Project for the First Time
 
  1. Open SmartSnippets Studio, and select a workspace.  The workspace should be the top level of SDK6: ![Workspace](imgs/workspace_selector.png)
 
@@ -19,7 +33,7 @@ Taking the DA1453x out of the box, changing sleep, advertising, and adding timer
 
  4. Click the browse button on the right, then navigate to this repo's code location.  Check the empty_peripheral_template project and select finish.  ![Browse for Project](imgs/browse_to_project.png) 
 
- 5. Next, click the pull down arrow on the Build icon and select the DA14531. ![sb](imgs/select_build.png)
+ 5.  Your project should compile and be ready to load.
 
- 6.  Your project should compile and be ready to load.
+ ## Lab
 

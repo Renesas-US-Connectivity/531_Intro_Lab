@@ -29,6 +29,11 @@
 #include "app_api.h"
 #include "user_empty_peripheral_template.h"
 
+#if defined (CFG_SPI_FLASH_ENABLE)
+#include "spi_flash.h"
+#endif
+
+
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -37,11 +42,22 @@
 
 void user_on_connection(uint8_t connection_idx, struct gapc_connection_req_ind const *param)
 {
-    default_app_on_connection(connection_idx, param);
+        default_app_on_connection(connection_idx, param);
 }
 
 void user_on_disconnect( struct gapc_disconnect_ind const *param )
 {
-    default_app_on_disconnect(param);
+        default_app_on_disconnect(param);
+}
+
+void user_app_on_set_dev_config_complete(void)
+{
+
+        default_app_on_set_dev_config_complete();
+
+#if defined (CFG_SPI_FLASH_ENABLE)
+        spi_flash_power_down();
+#endif
+
 }
 /// @} APP

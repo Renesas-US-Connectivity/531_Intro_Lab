@@ -30,6 +30,11 @@
  ****************************************************************************************
  */
 
+#if defined (CFG_SPI_FLASH_ENABLE)
+#include "spi.h"
+#include "spi_flash.h"
+#endif
+
 #if DEVELOPMENT_DEBUG
 
 void GPIO_reservations(void)
@@ -43,8 +48,13 @@ void GPIO_reservations(void)
     RESERVE_GPIO(UART2_TX, UART2_TX_PORT, UART2_TX_PIN, PID_UART2_TX);
 #endif
 
-#if !defined (__DA14586__)
+
+#if defined (CFG_SPI_FLASH_ENABLE) && !defined (__DA14586__)
+    // SPI Flash
     RESERVE_GPIO(SPI_EN, SPI_EN_PORT, SPI_EN_PIN, PID_SPI_EN);
+    RESERVE_GPIO(SPI_CLK, SPI_CLK_PORT, SPI_CLK_PIN, PID_SPI_CLK);
+    RESERVE_GPIO(SPI_DO, SPI_DO_PORT, SPI_DO_PIN, PID_SPI_DO);
+    RESERVE_GPIO(SPI_DI, SPI_DI_PORT, SPI_DI_PIN, PID_SPI_DI);
 #endif
 }
 
@@ -70,6 +80,14 @@ void set_pad_functions(void)
     GPIO_ConfigurePin(UART2_TX_PORT, UART2_TX_PIN, OUTPUT, PID_UART2_TX, false);
 #endif
 
+#if defined (CFG_SPI_FLASH_ENABLE)
+    // SPI Flash
+    GPIO_ConfigurePin(SPI_EN_PORT, SPI_EN_PIN, OUTPUT, PID_SPI_EN, true);
+    GPIO_ConfigurePin(SPI_CLK_PORT, SPI_CLK_PIN, OUTPUT, PID_SPI_CLK, false);
+    GPIO_ConfigurePin(SPI_DO_PORT, SPI_DO_PIN, OUTPUT, PID_SPI_DO, false);
+    GPIO_ConfigurePin(SPI_DI_PORT, SPI_DI_PIN, INPUT, PID_SPI_DI, false);
+#endif
+
 }
 
 #if defined (CFG_PRINTF_UART2)
@@ -84,6 +102,27 @@ static const uart_cfg_t uart_cfg = {
     .tx_fifo_tr_lvl = UART2_TX_FIFO_LEVEL,
     .rx_fifo_tr_lvl = UART2_RX_FIFO_LEVEL,
     .intr_priority = 2,
+};
+#endif
+
+#if defined (CFG_SPI_FLASH_ENABLE)
+// Configuration struct for SPI
+static const spi_cfg_t spi_cfg = {
+    .spi_ms = SPI_MS_MODE,
+    .spi_cp = SPI_CP_MODE,
+    .spi_speed = SPI_SPEED_MODE,
+    .spi_wsz = SPI_WSZ,
+    .spi_cs = SPI_CS,
+    .cs_pad.port = SPI_EN_PORT,
+    .cs_pad.pin = SPI_EN_PIN,
+#if defined (__DA14531__)
+    .spi_capture = SPI_EDGE_CAPTURE,
+#endif
+};
+
+// Configuration struct for SPI FLASH
+static const spi_flash_cfg_t spi_flash_cfg = {
+    .chip_size = SPI_FLASH_DEV_SIZE,
 };
 #endif
 
@@ -106,6 +145,14 @@ void periph_init(void)
 #if defined (CFG_PRINTF_UART2)
     // Initialize UART2
     uart_initialize(UART2, &uart_cfg);
+#endif
+
+#if defined (CFG_SPI_FLASH_ENABLE)
+    // Configure SPI Flash environment
+    spi_flash_configure_env(&spi_flash_cfg);
+
+    // Initialize SPI
+    spi_initialize(&spi_cfg);
 #endif
 
     // Set pad functionality
