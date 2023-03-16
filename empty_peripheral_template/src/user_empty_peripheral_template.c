@@ -28,17 +28,29 @@
 
 #include "app_api.h"
 #include "user_empty_peripheral_template.h"
+#include "app_easy_timer.h"
+ #include "arch_console.h"
 
 #if defined (CFG_SPI_FLASH_ENABLE)
 #include "spi_flash.h"
 #endif
 
-
+#define TIMER_INTVL            (25)
+static uint32_t timer_count __SECTION_ZERO("retention_mem_area0");
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
 */
+static void user_timer_cb(void)
+{
+        uint32_t current_time_ms;
+        timer_count++;
 
+        current_time_ms = timer_count*TIMER_INTVL*10;
+        app_easy_timer(TIMER_INTVL, user_timer_cb);
+
+        arch_printf("%s: %d\r\n", __func__, current_time_ms);
+}
 
 void user_on_connection(uint8_t connection_idx, struct gapc_connection_req_ind const *param)
 {
@@ -58,6 +70,9 @@ void user_app_on_set_dev_config_complete(void)
 #if defined (CFG_SPI_FLASH_ENABLE)
         spi_flash_power_down();
 #endif
+        timer_count = 0;
+
+        app_easy_timer(TIMER_INTVL, user_timer_cb);
 
 }
 /// @} APP
