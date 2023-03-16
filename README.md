@@ -27,6 +27,8 @@ Taking the DA1453x out of the box, changing sleep, advertising, and adding timer
 
  8.  Your power profiler is calibrated, you can plug the board back in now.
 
+ 9.  Put a jumper wire from UTX (J1 Middle Position of three pin UTX header) to P26 for UART operation.
+
  ## Importing the Project for the First Time
 
  1. Open SmartSnippets Studio, and select a workspace.  The workspace should be the top level of SDK6: ![Workspace](imgs/workspace_selector.png)
